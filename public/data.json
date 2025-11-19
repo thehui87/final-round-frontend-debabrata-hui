@@ -1,0 +1,100 @@
+{
+  "rows": [
+    {
+      "name": "David Wallace",
+      "email": "david.wallace@try.ramp.com",
+      "destination": "San Francisco",
+      "start": "Feb 5, 2024",
+      "end": "Feb 10, 2024",
+      "spend": "$0.02",
+      "title": "Sales Kick-Off in Miami",
+      "details": "Test description",
+      "department": "Customer Success",
+      "status": "completed"
+    },
+    {
+      "name": "David Wallace",
+      "email": "david.wallace@try.ramp.com",
+      "destination": "Jakarta",
+      "start": "May 1, 2024",
+      "end": "May 5, 2024",
+      "spend": "$0.50",
+      "title": "Sales Kick-Off in Miami2",
+      "details": "Test description",
+      "department": "Engineering",
+      "status": "completed"
+    },
+    {
+      "name": "David Wallace",
+      "email": "david.wallace@try.ramp.com",
+      "destination": "Abu Dhabi",
+      "start": "Sep 16, 2024",
+      "end": "Sep 20, 2024",
+      "spend": "$4.00",
+      "title": "Sales Kick-Off in Miami3",
+      "details": "Test description",
+      "department": "Executive",
+      "status": "completed"
+    },
+    {
+      "name": "David Wallace",
+      "email": "david.wallace@try.ramp.com",
+      "destination": "Beijing",
+      "start": "Nov 16, 2024",
+      "end": "Nov 26, 2024",
+      "spend": "$0.32",
+      "title": "Sales Kick-Off in Miami4",
+      "details": "Test description",
+      "department": "Finance",
+      "status": "completed"
+    },
+    {
+      "name": "David Wallace",
+      "email": "david.wallace@try.ramp.com",
+      "destination": "Tokyo",
+      "start": "Dec 16, 2025",
+      "end": "Dec 26, 2025",
+      "spend": "$0.00",
+      "title": "Sales Kick-Off in Miami5",
+      "details": "Test description",
+      "department": "Implementations",
+      "status": "completed"
+    },
+    {
+      "name": "David Wallace",
+      "email": "david.wallace@try.ramp.com",
+      "destination": "Taipei",
+      "start": "Dec 16, 2025",
+      "end": "Dec 26, 2025",
+      "spend": "$0.00",
+      "title": "Sales Kick-Off in Miami5",
+      "details": "Test description",
+      "department": "Legal & HR",
+      "status": "upcoming"
+    },
+    {
+      "name": "David Wallace",
+      "email": "david.wallace@try.ramp.com",
+      "destination": "Mumbai",
+      "start": "Dec 16, 2025",
+      "end": "Dec 26, 2025",
+      "spend": "$0.00",
+      "title": "Sales Kick-Off in Miami5",
+      "details": "Test description",
+      "department": "Marketing",
+      "status": "upcoming"
+    },
+    {
+      "name": "David Wallace",
+      "email": "david.wallace@try.ramp.com",
+      "destination": "Miami",
+      "start": "Nov 14, 2025",
+      "end": "Dec 26, 2025",
+      "spend": "$0.00",
+      "title": "Sales Kick-Off in Miami5",
+      "details": "Test description",
+      "department": "Marketing",
+      "status": "active"
+    }
+  ]
+}
