@@ -123,7 +123,7 @@ export default function Sidebar() {
         <div className="relative group">
           <button
             className="p-3 hover:bg-[#ebe8e5] rounded-lg transition text-gray-600 hover:text-black"
-            onClick={() => setOpenDropdown(!openDropdown)}
+            // onClick={() => setOpenDropdown(!openDropdown)}
           >
             <PanelLeft size={16} />
           </button>
