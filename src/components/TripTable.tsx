@@ -184,7 +184,7 @@ export default function TripTable({
 
   const totalRows = sortedRows.length;
   const totalPages = Math.ceil(sortedRows.length / ROWS_PER_PAGE);
-  const safePage = Math.min(currentPage, totalPages);
+  const safePage = Math.min(Math.max(currentPage, 1), totalPages);
 
   const startIndex = (safePage - 1) * ROWS_PER_PAGE;
   const endIndex = Math.min(startIndex + ROWS_PER_PAGE, totalRows);
@@ -193,9 +193,11 @@ export default function TripTable({
 
   const visibleColumns = columns.filter(c => c.visible);
 
-  if (currentPage > totalPages) {
-    setCurrentPage(1);
-  }
+  // useEffect(() => {
+  //   if (currentPage > totalPages) {
+  //     setCurrentPage(1);
+  //   }
+  // }, [currentPage, totalPages]);
 
   return (
     <div className="bg-[#fcfbfa]">
@@ -326,7 +328,7 @@ export default function TripTable({
             {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
               <button
                 key={page}
-                onClick={() => setCurrentPage(page)}
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 className={`px-3 py-1 border rounded ${
                   safePage === page ? "bg-black text-white" : "hover:bg-gray-100"
                 }`}

@@ -1,6 +1,4 @@
 // Tooltip.tsx
-import React from "react";
-
 export default function Tooltip({
   category,
   amount,

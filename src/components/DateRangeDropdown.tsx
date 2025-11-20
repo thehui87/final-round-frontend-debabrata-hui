@@ -9,9 +9,11 @@ import { format } from "date-fns";
 export default function DateRangeDropdown({
   range,
   setRange,
+  position = "top",
 }: {
   range: DateRange | undefined;
   setRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
+  position?: "top" | "bottom";
 }) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -115,10 +117,18 @@ export default function DateRangeDropdown({
       {open && (
         <div
           className={`
-    absolute bottom-3 left-1/2 translate-y-[-30px] 
+    absolute  ${
+      position === "top" ? "bottom-3 mb-2 left-1/2 translate-y-[-30px] " : "top-10  mt-2 -right-60 "
+    }
     bg-white border border-[#e8e7dd] shadow-xl rounded-sm z-50
     flex flex-col
-    ${showCustomRange ? "min-w-[500px] -translate-x-[70%]" : "min-w-[340px] -translate-x-[60%]"} 
+    ${
+      showCustomRange && position === "top"
+        ? "min-w-[500px] -translate-x-[70%]"
+        : showCustomRange && position === "bottom"
+        ? "min-w-[500px] -translate-x-[40%]"
+        : "min-w-[340px] -translate-x-[60%]"
+    } 
     transition-all duration-200
   `}
         >

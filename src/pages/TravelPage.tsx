@@ -8,6 +8,7 @@ import type { AppDispatch, RootState } from "../redux/store";
 import { setData } from "../redux/slices/tripSlice";
 import { getMostFrequentValues, getBiggestSpender, getTripStats } from "../helper/funtions";
 import SpendBar from "../components/Spendbar";
+import { Modal } from "../components/Modal";
 
 export default function TravelPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -24,6 +25,7 @@ export default function TravelPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
 
+  const [open, setOpen] = useState(false);
   const cleanedRows = tripData.map(row => {
     const num = parseFloat(row.spend.replace("$", "")) || 0;
     return {
@@ -93,9 +95,24 @@ export default function TravelPage() {
 
             {dateOpen && (
               <div className="absolute mt-1 w-64 bg-white border border-gray-300 shadow-md text-left">
-                <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Last 6 months</div>
-                <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">This year</div>
-                <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Custom range</div>
+                <div
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => setOpen(true)}
+                >
+                  Last 6 months
+                </div>
+                <div
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => setOpen(true)}
+                >
+                  This year
+                </div>
+                <div
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => setOpen(true)}
+                >
+                  Custom range
+                </div>
               </div>
             )}
           </div>
@@ -136,6 +153,12 @@ export default function TravelPage() {
 
       <SlidingTabs onChange={i => setActiveTab(i)} />
       <TripTable activeTab={activeTab} columns={columns} setColumns={setColumns} />
+
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        onGetStarted={() => alert("Redirecting...")}
+      ></Modal>
     </div>
   );
 }
