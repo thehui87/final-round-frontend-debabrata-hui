@@ -122,7 +122,7 @@ export default function TripTable({
     }
 
     return currentRows;
-  }, [activeTab, activeFilters, dateRange]);
+  }, [activeTab, activeFilters, tripData, dateRange]);
 
   const sortedRows = useMemo(() => {
     if (!sortConfig.key) return filteredRows;
