@@ -10,6 +10,8 @@ import type { DateRange } from "react-day-picker";
 import { useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
 
+const ROWS_PER_PAGE = 5;
+
 export default function TripTable({
   activeTab,
   columns,
@@ -37,6 +39,7 @@ export default function TripTable({
     key: null,
     direction: "asc",
   });
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleSort = (key: keyof Row) => {
     setSortConfig(prev => {
@@ -153,8 +156,6 @@ export default function TripTable({
     });
   }, [filteredRows, sortConfig]);
 
-  const visibleColumns = columns.filter(c => c.visible);
-
   const downloadCSV = () => {
     if (filteredRows.length === 0) return;
 
@@ -180,6 +181,21 @@ export default function TripTable({
     link.click();
     document.body.removeChild(link);
   };
+
+  const totalRows = sortedRows.length;
+  const totalPages = Math.ceil(sortedRows.length / ROWS_PER_PAGE);
+  const safePage = Math.min(currentPage, totalPages);
+
+  const startIndex = (safePage - 1) * ROWS_PER_PAGE;
+  const endIndex = Math.min(startIndex + ROWS_PER_PAGE, totalRows);
+
+  const paginatedRows = sortedRows.slice(startIndex, endIndex);
+
+  const visibleColumns = columns.filter(c => c.visible);
+
+  if (currentPage > totalPages) {
+    setCurrentPage(1);
+  }
 
   return (
     <div className="bg-[#fcfbfa]">
@@ -242,7 +258,7 @@ export default function TripTable({
 
           {/* ROWS */}
           <tbody>
-            {sortedRows.map((row, idx) => (
+            {paginatedRows.map((row, idx) => (
               <tr
                 key={idx}
                 className="border-b border-[#f4f3ef] cursor-pointer hover:bg-[#faf9f6]"
@@ -287,8 +303,54 @@ export default function TripTable({
         </div>
       )}
 
-      {sortedRows.length > 0 && (
+      {/* {sortedRows.length > 0 && (
         <div className="text-sm text-right px-14 py-4 text-gray-500">{`1– ${sortedRows.length} of ${sortedRows.length} trips`}</div>
+      )} */}
+
+      {sortedRows.length > 0 && (
+        <div className="flex justify-between items-center px-14 py-4 text-gray-600 text-sm">
+          {/* Pagination controls */}
+          <div className="flex items-center gap-2">
+            {/* Previous */}
+            <button
+              disabled={safePage === 1}
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              className={`px-3 py-1 border rounded ${
+                safePage === 1 ? "opacity-40 cursor-not-allowed" : "hover:bg-gray-100"
+              }`}
+            >
+              Prev
+            </button>
+
+            {/* Page numbers */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`px-3 py-1 border rounded ${
+                  safePage === page ? "bg-black text-white" : "hover:bg-gray-100"
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+
+            {/* Next */}
+            <button
+              disabled={safePage === totalPages}
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              className={`px-3 py-1 border rounded ${
+                safePage === totalPages ? "opacity-40 cursor-not-allowed" : "hover:bg-gray-100"
+              }`}
+            >
+              Next
+            </button>
+          </div>
+          {/* Showing X–Y of Z */}
+          <div>
+            {startIndex + 1}–{endIndex} of {totalRows} trips
+          </div>
+        </div>
       )}
 
       {selectedTrip && (

@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../redux/store";
 import { setData } from "../redux/slices/tripSlice";
 import { getMostFrequentValues, getBiggestSpender, getTripStats } from "../helper/funtions";
+import SpendBar from "../components/Spendbar";
 
 export default function TravelPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -91,7 +92,7 @@ export default function TravelPage() {
             </button>
 
             {dateOpen && (
-              <div className="absolute mt-1 w-64 bg-white border border-gray-300 shadow-md">
+              <div className="absolute mt-1 w-64 bg-white border border-gray-300 shadow-md text-left">
                 <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Last 6 months</div>
                 <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">This year</div>
                 <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Custom range</div>
@@ -108,11 +109,14 @@ export default function TravelPage() {
             <span className="text-[40px]">${integerPart}</span>
             <span className="text-[24px]">.{decimalPart} USD</span>
           </h2>
-          {/* Progress bar */}
-          <div className="w-full h-2 bg-gray-200 rounded-full mt-4">
-            <div className="h-2 bg-green-700 rounded-full" style={{ width: "85%" }}></div>
-          </div>
 
+          <SpendBar
+            data={[
+              { category: "Airlines", amount: 6965.63 },
+              { category: "Hotels", amount: 4120.1 },
+              { category: "GroundTransportation", amount: 870.3 },
+            ]}
+          />
           {/* Stat Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mt-10">
             <StatItem title="Cashback" value="$967.97" />
