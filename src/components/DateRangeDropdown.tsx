@@ -95,13 +95,16 @@ export default function DateRangeDropdown({
       {/* Trigger Button */}
       <button
         onClick={() => setOpen(!open)}
-        className={`flex items-center justify-center h-10 rounded-full ${
+        className={`relative group flex items-center justify-center h-10 rounded-full ${
           range?.from && range?.to ? "px-4 w-36 gap-2" : "w-10"
         } ${
           open ? "bg-[#5c614b] text-white hover:bg-[#5c614b]" : " text-black hover:bg-[#f4f4f4]"
         } `}
       >
         <Calendar size={16} />
+        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none bg-white text-black text-xs px-2 py-1 border border-[#ebe8e5] shadow transition-opacity duration-200">
+          Trip Date
+        </span>
         {range?.from && range?.to && (
           <div className="flex text-xs">
             {`${safeFormat(range?.from, "MMM d")} - ${safeFormat(range?.to, "MMM d")}`}

@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import data from "../../public/data.json";
 import { type Column, type Row } from "../helper/type";
 import FilterDropdown from "../components/FilterDropdown";
 import DateRangeDropdown from "../components/DateRangeDropdown";
@@ -8,8 +7,8 @@ import SelectedTrip from "./SelectedTrip";
 import { Download, ArrowUp, ArrowDown } from "lucide-react";
 import type { ActiveFilters } from "../helper/type";
 import type { DateRange } from "react-day-picker";
-
-const rows: Row[] = data.rows;
+import { useSelector } from "react-redux";
+import type { RootState } from "../redux/store";
 
 export default function TripTable({
   activeTab,
@@ -20,6 +19,7 @@ export default function TripTable({
   columns: Column[];
   setColumns: React.Dispatch<React.SetStateAction<Column[]>>;
 }) {
+  const { tripData } = useSelector((state: RootState) => state.trip);
   const [selectedTrip, setSelectedTrip] = useState<Row | null>(null);
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
     department: [],
@@ -67,7 +67,7 @@ export default function TripTable({
   }, [activeFilters]);
 
   const filteredRows = useMemo(() => {
-    let currentRows = rows;
+    let currentRows = tripData;
 
     // Active Tab logic...
     if (activeTab !== 0) {
@@ -79,7 +79,7 @@ export default function TripTable({
         if (activeTab === 1) return start <= today && end >= today;
         if (activeTab === 2) return start > today;
         if (activeTab === 3) return end < today;
-        return rows;
+        return row;
       });
     }
     if (activeFilters.department.length > 0) {
@@ -192,9 +192,13 @@ export default function TripTable({
             <ColumnSelector columns={columns} setColumns={setColumns} />
             <button
               onClick={downloadCSV}
-              className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors text-black hover:bg-[#f4f4f4]`}
+              className={`relative group flex items-center justify-center w-10 h-10 rounded-full transition-colors text-black hover:bg-[#f4f4f4]`}
             >
               <Download size={16} />
+              {/* Tooltip */}
+              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none bg-white text-black text-xs px-2 py-1 border border-[#ebe8e5] shadow transition-opacity duration-200">
+                Export (CSV)
+              </span>
             </button>
           </div>
         </div>

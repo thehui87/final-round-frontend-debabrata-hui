@@ -53,11 +53,15 @@ export default function ColumnSelector({ columns, setColumns }: Props) {
       {/* Trigger Button */}
       <button
         onClick={() => setOpen(!open)}
-        className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors ${
+        className={`relative group flex items-center justify-center w-10 h-10 rounded-full transition-colors ${
           open ? "bg-[#5c614b] text-white" : "text-black hover:bg-[#f4f4f4]"
         }`}
       >
         <Columns3 size={16} />
+        {/* Tooltip */}
+        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none bg-white text-black text-xs px-2 py-1 border border-[#ebe8e5] shadow transition-opacity duration-200">
+          Customize Column
+        </span>
       </button>
 
       {open && (

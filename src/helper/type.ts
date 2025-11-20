@@ -9,6 +9,8 @@ export type Row = {
   details: string;
   department: string;
   status: string;
+  airline: string;
+  hotel: string;
 };
 
 export interface Column {

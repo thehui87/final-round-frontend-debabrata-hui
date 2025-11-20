@@ -10,7 +10,9 @@
       "title": "Sales Kick-Off in Miami",
       "details": "Test description",
       "department": "Customer Success",
-      "status": "completed"
+      "status": "completed",
+      "airline": "Alaskan Airlines",
+      "hotel": "Hilton"
     },
     {
       "name": "David Wallace",
@@ -22,7 +24,9 @@
       "title": "Sales Kick-Off in Miami2",
       "details": "Test description",
       "department": "Engineering",
-      "status": "completed"
+      "status": "completed",
+      "airline": "Southwestern Airlines",
+      "hotel": "Hyatt"
     },
     {
       "name": "David Wallace",
@@ -34,7 +38,9 @@
       "title": "Sales Kick-Off in Miami3",
       "details": "Test description",
       "department": "Executive",
-      "status": "completed"
+      "status": "completed",
+      "airline": "Hawaiian Airlines",
+      "hotel": "Wyndham"
     },
     {
       "name": "David Wallace",
@@ -46,10 +52,12 @@
       "title": "Sales Kick-Off in Miami4",
       "details": "Test description",
       "department": "Finance",
-      "status": "completed"
+      "status": "completed",
+      "airline": "Southwestern Airlines",
+      "hotel": "Hilton"
     },
     {
-      "name": "David Wallace",
+      "name": "Steven Gerrard",
       "email": "david.wallace@try.ramp.com",
       "destination": "Tokyo",
       "start": "Dec 16, 2025",
@@ -58,7 +66,9 @@
       "title": "Sales Kick-Off in Miami5",
       "details": "Test description",
       "department": "Implementations",
-      "status": "completed"
+      "status": "completed",
+      "airline": "Jet Blue",
+      "hotel": "InterContinental Hotels Group"
     },
     {
       "name": "David Wallace",
@@ -70,10 +80,12 @@
       "title": "Sales Kick-Off in Miami5",
       "details": "Test description",
       "department": "Legal & HR",
-      "status": "upcoming"
+      "status": "upcoming",
+      "airline": "Spirit Airlines",
+      "hotel": "Hilton"
     },
     {
-      "name": "David Wallace",
+      "name": "Andrew Flintoff",
       "email": "david.wallace@try.ramp.com",
       "destination": "Mumbai",
       "start": "Dec 16, 2025",
@@ -82,7 +94,9 @@
       "title": "Sales Kick-Off in Miami5",
       "details": "Test description",
       "department": "Marketing",
-      "status": "upcoming"
+      "status": "upcoming",
+      "airline": "Southwestern Airlines",
+      "hotel": "Marriott International"
     },
     {
       "name": "David Wallace",
@@ -94,7 +108,23 @@
       "title": "Sales Kick-Off in Miami5",
       "details": "Test description",
       "department": "Marketing",
-      "status": "active"
+      "status": "active",
+      "airline": "United Airlines",
+      "hotel": "Wyndham"
+    },
+    {
+      "name": "Roy Kean",
+      "email": "david.wallace@try.ramp.com",
+      "destination": "Taipei",
+      "start": "Sep 16, 2024",
+      "end": "Sep 20, 2024",
+      "spend": "$4.00",
+      "title": "Sales Kick-Off in Miami3",
+      "details": "Test description",
+      "department": "Executive",
+      "status": "completed",
+      "airline": "Delta Airlines",
+      "hotel": "Best Western"
     }
   ]
 }

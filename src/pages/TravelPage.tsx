@@ -2,10 +2,15 @@ import { useState, useEffect, useRef } from "react";
 import TripTable from "../components/TripTable";
 import { CalendarRange, ChevronDown } from "lucide-react";
 import SlidingTabs from "../components/SlidingTabs";
-import type { Column, Row } from "../helper/type";
+import type { Column } from "../helper/type";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../redux/store";
+import { setData } from "../redux/slices/tripSlice";
+import { getMostFrequentValues, getBiggestSpender, getTripStats } from "../helper/funtions";
 
 export default function TravelPage() {
-  const [rows, setRows] = useState<Row[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const { tripData } = useSelector((state: RootState) => state.trip);
   const [activeTab, setActiveTab] = useState(0);
   const [columns, setColumns] = useState<Column[]>([
     { key: "name", label: "Name", visible: true, locked: true },
@@ -16,7 +21,9 @@ export default function TravelPage() {
   ]);
   const [dateOpen, setDateOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const cleanedRows = rows.map(row => {
+  const [loading, setLoading] = useState(true);
+
+  const cleanedRows = tripData.map(row => {
     const num = parseFloat(row.spend.replace("$", "")) || 0;
     return {
       ...row,
@@ -24,19 +31,29 @@ export default function TravelPage() {
     };
   });
 
+  const topAirlines = getMostFrequentValues(tripData, "airline");
+  const topHotels = getMostFrequentValues(tripData, "hotel");
+  const topDestinations = getMostFrequentValues(tripData, "destination");
+  const biggestSpender = getBiggestSpender(tripData);
+  const biggestTrip = biggestSpender?.spend;
+  const averageTripCost = "$" + getTripStats(tripData).averageTripCost.toFixed(2);
+
   const total = cleanedRows.reduce((sum, row) => sum + row.spend, 0);
+  const totalString = total.toFixed(2); // e.g., "1234.56"
+  const [integerPart, decimalPart] = totalString.split(".");
 
   useEffect(() => {
     fetch("/data.json")
       .then(res => res.json())
       .then(data => {
         if (data && Array.isArray(data.rows)) {
-          setRows(data.rows);
+          dispatch(setData(data.rows));
         } else {
           console.error("Fetched data does not contain a 'rows' array.");
         }
       })
-      .catch(error => console.error("Error fetching data:", error));
+      .catch(error => console.error("Error fetching data:", error))
+      .finally(() => setLoading(false));
 
     const handleClick = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -45,7 +62,9 @@ export default function TravelPage() {
     };
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
+  }, [dispatch]);
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="w-full bg-white py-10">
@@ -81,20 +100,14 @@ export default function TravelPage() {
           </div>
         </div>
 
-        {/* Search + Filter Row */}
-        {/* <div className="flex justify-between items-center mt-6 ">
-          <div className="w-full py-4 flex justify-start items-center gap-10 bg-[#fcfbfa] px-14">
-            <div className="flex items-center gap-4 text-xl text-gray-600">
-              <Calendar size={16} />
-            </div>
-          </div>
-        </div> */}
-
         {/* Spend Section */}
         <div className="my-10 px-14 text-left">
           <p className="text-sm text-gray-500">Spend</p>
-          <h2 className="text-4xl font-semibold mt-1">${`${total.toFixed(2)}`}</h2>
-
+          {/* <h2 className="text-4xl font-semibold mt-1">${`${total.toFixed(2)}`}</h2> */}
+          <h2 className="text-4xl font-normal mt-1 flex items-baseline">
+            <span className="text-[40px]">${integerPart}</span>
+            <span className="text-[24px]">.{decimalPart} USD</span>
+          </h2>
           {/* Progress bar */}
           <div className="w-full h-2 bg-gray-200 rounded-full mt-4">
             <div className="h-2 bg-green-700 rounded-full" style={{ width: "85%" }}></div>
@@ -103,13 +116,16 @@ export default function TravelPage() {
           {/* Stat Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mt-10">
             <StatItem title="Cashback" value="$967.97" />
-            <StatItem title="Number of trips" value="3" />
-            <StatItem title="Average trip cost" value="$0.00" />
-            <StatItem title="Biggest trip" value="N/A" />
-            <StatItem title="Biggest spender" value="N/A" />
-            <StatItem title="Top destination" value="N/A" />
-            <StatItem title="Top hotel chain" value="N/A" />
-            <StatItem title="Top airline" value="N/A" />
+            <StatItem
+              title="Number of trips"
+              value={String(getTripStats(tripData).numberOfTrips)}
+            />
+            <StatItem title="Average trip cost" value={averageTripCost} />
+            <StatItem title="Biggest trip" value={biggestTrip ?? "N/A"} />
+            <StatItem title="Biggest spender" value={biggestSpender?.name ?? "N/A"} />
+            <StatItem title="Top destination" value={topDestinations[0] ?? "N/A"} />
+            <StatItem title="Top hotel chain" value={topHotels[0] ?? "N/A"} />
+            <StatItem title="Top airline" value={topAirlines[0] ?? "N/A"} />
           </div>
         </div>
       </div>
