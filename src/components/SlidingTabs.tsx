@@ -18,7 +18,7 @@ export default function SlidingTabs({ onChange }: { onChange: (i: number) => voi
   }, [activeTab]);
 
   return (
-    <div className="border-y border-[#ebe8e5] relative w-full pt-4 px-14">
+    <div className="border-y border-[#ebe8e5] relative w-full pt-4 px-0 sm:px-14">
       {/* Tabs */}
       <div className="flex gap-8 px-4 py-2 text-gray-600 text-sm">
         {tabs.map((tab, i) => (
@@ -31,7 +31,7 @@ export default function SlidingTabs({ onChange }: { onChange: (i: number) => voi
               setActiveTab(i);
               onChange(i); // 🔥 notify parent
             }}
-            className={`pb-2 transition-colors hover:underline px-4 ${
+            className={`pb-2 transition-colors hover:underline px-4 cursor-pointer ${
               activeTab === i ? "text-black" : "text-gray-500"
             }`}
           >

@@ -8,12 +8,16 @@ export interface TripState {
   activeTab: number;
   dateRange: DateRange | undefined;
   tripData: Row[];
+  filteredTrips: Row[];
+  globalFilterOn: boolean;
 }
 
 const initialState: TripState = {
   activeTab: 0,
   dateRange: undefined,
   tripData: [],
+  filteredTrips: [],
+  globalFilterOn: false,
 };
 
 const tripSlice = createSlice({
@@ -29,8 +33,15 @@ const tripSlice = createSlice({
     setData: (state, action: PayloadAction<Row[]>) => {
       state.tripData = action.payload;
     },
+    setFilteredTrips: (state, action: PayloadAction<Row[]>) => {
+      state.filteredTrips = action.payload;
+    },
+    setGlobalFilterOn: (state, action: PayloadAction<boolean>) => {
+      state.globalFilterOn = action.payload;
+    },
   },
 });
 
-export const { setActiveTab, setDateRange, setData } = tripSlice.actions;
+export const { setActiveTab, setDateRange, setData, setFilteredTrips, setGlobalFilterOn } =
+  tripSlice.actions;
 export default tripSlice.reducer;

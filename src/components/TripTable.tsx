@@ -9,6 +9,7 @@ import type { ActiveFilters } from "../helper/type";
 import type { DateRange } from "react-day-picker";
 import { useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
+import { parseSpend } from "../helper/functions";
 
 const ROWS_PER_PAGE = 5;
 
@@ -21,7 +22,8 @@ export default function TripTable({
   columns: Column[];
   setColumns: React.Dispatch<React.SetStateAction<Column[]>>;
 }) {
-  const { tripData } = useSelector((state: RootState) => state.trip);
+  const { tripData, filteredTrips, globalFilterOn } = useSelector((state: RootState) => state.trip);
+  // const [activeData, setActiveData] = useState<Row[]>([]);
   const [selectedTrip, setSelectedTrip] = useState<Row | null>(null);
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
     department: [],
@@ -69,8 +71,12 @@ export default function TripTable({
     );
   }, [activeFilters]);
 
+  const activeData = useMemo(() => {
+    return globalFilterOn ? filteredTrips : tripData;
+  }, [filteredTrips, tripData, globalFilterOn]);
+
   const filteredRows = useMemo(() => {
-    let currentRows = tripData;
+    let currentRows = activeData;
 
     // Active Tab logic...
     if (activeTab !== 0) {
@@ -102,11 +108,16 @@ export default function TripTable({
     // Filter by Amount (spend)
     if (activeFilters.amount) {
       const { min, max } = activeFilters.amount;
+
       if (min !== null || max !== null) {
         currentRows = currentRows.filter(row => {
-          const spend = parseFloat(row.spend.replace(/[$,]/g, ""));
-          const isAboveMin = min === null || spend >= min;
-          const isBelowMax = max === null || spend <= max;
+          const travel = parseFloat(row.travelCost.replace(/[$,]/g, "")) || 0;
+          const hotel = parseFloat(row.hotelCost.replace(/[$,]/g, "")) || 0;
+          const totalSpend = travel + hotel;
+
+          const isAboveMin = min === null || totalSpend >= min;
+          const isBelowMax = max === null || totalSpend <= max;
+
           return isAboveMin && isBelowMax;
         });
       }
@@ -125,7 +136,7 @@ export default function TripTable({
     }
 
     return currentRows;
-  }, [activeTab, activeFilters, tripData, dateRange]);
+  }, [activeTab, activeFilters, activeData, dateRange]);
 
   const sortedRows = useMemo(() => {
     if (!sortConfig.key) return filteredRows;
@@ -136,7 +147,7 @@ export default function TripTable({
       const valueB = b[key] ?? "";
 
       // numeric compare for spend
-      if (key === "spend") {
+      if (key === "travelCost") {
         const numA = parseFloat(String(valueA).replace(/[$,]/g, "")) || 0;
         const numB = parseFloat(String(valueB).replace(/[$,]/g, "")) || 0;
         return sortConfig.direction === "asc" ? numA - numB : numB - numA;
@@ -193,12 +204,6 @@ export default function TripTable({
 
   const visibleColumns = columns.filter(c => c.visible);
 
-  // useEffect(() => {
-  //   if (currentPage > totalPages) {
-  //     setCurrentPage(1);
-  //   }
-  // }, [currentPage, totalPages]);
-
   return (
     <div className="bg-[#fcfbfa]">
       {/* Search under tabs */}
@@ -229,17 +234,17 @@ export default function TripTable({
           {/* HEADER */}
           <thead>
             <tr className="border-b border-[#f4f3ef]">
-              <th className="px-4 border-r border-[#f4f3ef]"></th>
+              <th className="w-14 border-r border-[#f4f3ef]"></th>
 
               {visibleColumns.map(col => (
                 <th
                   key={col.key}
                   onClick={() => handleSort(col.key as keyof Row)}
-                  className={`px-4 text-left border-r border-[#f4f3ef] py-2 ${
-                    col.key === "spend" ? "text-right" : "text-left"
+                  className={`px-4 border-r border-[#f4f3ef] py-2 ${
+                    col.key === "travelCost" ? "text-right" : "text-left"
                   }`}
                 >
-                  <div className="flex items-center gap-1">
+                  <div className={`flex gap-1 ${col.key === "travelCost" ? "justify-end" : ""}`}>
                     {col.label}
                     {sortConfig.key === col.key && (
                       <span>
@@ -254,7 +259,7 @@ export default function TripTable({
                 </th>
               ))}
 
-              <th className="px-4"></th>
+              <th className="w-14"></th>
             </tr>
           </thead>
 
@@ -266,13 +271,13 @@ export default function TripTable({
                 className="border-b border-[#f4f3ef] cursor-pointer hover:bg-[#faf9f6]"
                 onClick={() => setSelectedTrip(row)}
               >
-                <td className="px-4 border-r border-[#f4f3ef]"></td>
+                <td className="w-14 border-r border-[#f4f3ef]"></td>
 
                 {visibleColumns.map(col => (
                   <td
                     key={col.key}
                     className={`px-4 border-r border-[#f4f3ef] py-3 ${
-                      col.key === "spend" ? "text-right" : "text-left"
+                      col.key === "travelCost" ? "text-right" : "text-left"
                     }`}
                   >
                     {col.key === "name" ? (
@@ -288,13 +293,15 @@ export default function TripTable({
                           <p className="text-xs text-[#707062]">{row.email}</p>
                         </div>
                       </div>
+                    ) : col.key === "travelCost" ? (
+                      <div>${parseSpend(row["travelCost"]) + parseSpend(row["hotelCost"])}</div>
                     ) : (
                       row[col.key]
                     )}
                   </td>
                 ))}
 
-                <td className="px-4"></td>
+                <td className="w-14"></td>
               </tr>
             ))}
           </tbody>
@@ -317,7 +324,7 @@ export default function TripTable({
             <button
               disabled={safePage === 1}
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-              className={`px-3 py-1 border rounded ${
+              className={`px-3 py-1 border rounded cursor-pointer ${
                 safePage === 1 ? "opacity-40 cursor-not-allowed" : "hover:bg-gray-100"
               }`}
             >
@@ -328,9 +335,9 @@ export default function TripTable({
             {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
               <button
                 key={page}
-                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                className={`px-3 py-1 border rounded ${
-                  safePage === page ? "bg-black text-white" : "hover:bg-gray-100"
+                onClick={() => setCurrentPage(page)}
+                className={`px-3 py-1 border rounded cursor-pointer ${
+                  safePage === page ? "bg-[#575b46] text-white" : "hover:bg-gray-100"
                 }`}
               >
                 {page}
@@ -341,13 +348,14 @@ export default function TripTable({
             <button
               disabled={safePage === totalPages}
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-              className={`px-3 py-1 border rounded ${
+              className={`px-3 py-1 border rounded cursor-pointer ${
                 safePage === totalPages ? "opacity-40 cursor-not-allowed" : "hover:bg-gray-100"
               }`}
             >
               Next
             </button>
           </div>
+
           {/* Showing X–Y of Z */}
           <div>
             {startIndex + 1}–{endIndex} of {totalRows} trips

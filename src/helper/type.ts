@@ -1,16 +1,19 @@
 export type Row = {
   name: string;
   email: string;
+  location: string;
   destination: string;
   start: string;
   end: string;
-  spend: string;
+  travelCost: string;
+  hotelCost: string;
   title: string;
   details: string;
   department: string;
   status: string;
   airline: string;
   hotel: string;
+  role: string;
 };
 
 export interface Column {
@@ -25,4 +28,19 @@ export interface ActiveFilters {
   amount?: { min: number | null; max: number | null };
   location: string[];
   cardholder: string[];
+}
+
+export interface BiggestSpenderDataProps {
+  name: string;
+  email: string;
+  role: string;
+  department: string;
+  location: string;
+  totalSpent: number;
+  trips: Row[];
+}
+
+export interface BiggestTripDataProps {
+  totalCost: number;
+  trips: Row | null;
 }

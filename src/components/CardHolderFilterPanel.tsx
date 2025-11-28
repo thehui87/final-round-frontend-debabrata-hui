@@ -53,10 +53,13 @@ export default function CardHolderFilterPanel({
           return (
             <div
               key={ch}
-              className="flex items-center justify-between px-4 py-3 hover:bg-[#f7f6f2] group cursor-pointer"
+              className="flex items-center justify-between px-4 hover:bg-[#f7f6f2] group cursor-pointer"
             >
               {/* Checkbox + label */}
-              <label className="flex items-center gap-3 cursor-pointer" onClick={() => toggle(ch)}>
+              <label
+                className="flex items-center gap-3 cursor-pointer py-3 w-full"
+                onClick={() => toggle(ch)}
+              >
                 <div
                   className={`w-4 h-4 border rounded-sm flex items-center justify-center ${
                     isSelected ? "bg-green-600 border-green-600" : "border-gray-400"

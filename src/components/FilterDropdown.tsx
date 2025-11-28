@@ -1,11 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Search, ArrowRight, Funnel, X } from "lucide-react";
 import AmountFilterPanel from "./AmountFilterPanel";
 import DepartmentFilterPanel from "./DepartmentFilterPanel";
 import LocationFilterPanel from "./LocationFilterPanel";
 import CardHolderFilterPanel from "./CardHolderFilterPanel";
-import { filterOptions, departments, cardholders, locations } from "../helper/data";
+import { filterOptions, cardholders } from "../helper/data";
+// locations, departments
 import type { ActiveFilters } from "../helper/type";
+import { useSelector } from "react-redux";
+import type { RootState } from "../redux/store";
 
 interface FilterDropdownProps {
   activeFilters: ActiveFilters;
@@ -19,12 +22,21 @@ export default function FilterDropdown({ activeFilters, setActiveFilters }: Filt
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const [search, setSearch] = useState("");
+  const { tripData, filteredTrips, globalFilterOn } = useSelector((state: RootState) => state.trip);
+
+  const activeData = useMemo(() => {
+    return globalFilterOn ? filteredTrips : tripData;
+  }, [filteredTrips, tripData, globalFilterOn]);
+
+  const locations = Array.from(new Set(activeData.map(item => item.destination)));
+  const departments = Array.from(new Set(activeData.map(item => item.department)));
 
   const searchableItems = [
     ...departments.map(name => ({ name, type: "Department" })),
     ...locations.map(name => ({ name, type: "Location" })),
     ...cardholders.map(name => ({ name, type: "Cardholder" })),
   ];
+
   // Close on outside click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -94,9 +106,9 @@ export default function FilterDropdown({ activeFilters, setActiveFilters }: Filt
       </div>
 
       <div className="flex gap-4">
-        <div className="flex gap-2 flex-wrap mt-3">
-          {/* Department chip group */}
-          {activeFilters.department.length > 0 && (
+        {/* Department chip group */}
+        {activeFilters.department.length > 0 && (
+          <div className="flex gap-2 flex-wrap mt-3">
             <div
               onClick={e => {
                 const pillRect = e.currentTarget.getBoundingClientRect();
@@ -128,7 +140,7 @@ export default function FilterDropdown({ activeFilters, setActiveFilters }: Filt
                 <X size={16} />
               </button>
 
-              <span className="font-medium">Department</span>
+              <span className="font-medium text-sm hover:underline">Department</span>
 
               {activeFilters.department.slice(0, 3).map(dep => (
                 <span key={dep} className="bg-white rounded-full px-2 py-0.5 text-sm border">
@@ -142,12 +154,12 @@ export default function FilterDropdown({ activeFilters, setActiveFilters }: Filt
                 </span>
               )}
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
-        <div className="flex gap-2 flex-wrap mt-3">
-          {/* Location chip group */}
-          {activeFilters.location.length > 0 && (
+        {/* Location chip group */}
+        {activeFilters.location.length > 0 && (
+          <div className="flex gap-2 flex-wrap mt-3">
             <div
               onClick={e => {
                 const pillRect = e.currentTarget.getBoundingClientRect();
@@ -179,10 +191,10 @@ export default function FilterDropdown({ activeFilters, setActiveFilters }: Filt
                 <X size={16} />
               </button>
 
-              <span className="font-medium">Location</span>
+              <span className="font-medium text-sm hover:underline">Location</span>
 
               {activeFilters.location.slice(0, 3).map(dep => (
-                <span key={dep} className="bg-white rounded-full px-2 py-0.5 text-sm border">
+                <span key={dep} className="bg-[#f4f3ef] rounded-full px-2 py-0.5 text-sm border">
                   {dep}
                 </span>
               ))}
@@ -193,12 +205,12 @@ export default function FilterDropdown({ activeFilters, setActiveFilters }: Filt
                 </span>
               )}
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
-        <div className="flex gap-2 flex-wrap mt-3">
-          {activeFilters.amount &&
-            (activeFilters.amount.min !== null || activeFilters.amount.max !== null) && (
+        {activeFilters.amount &&
+          (activeFilters.amount.min !== null || activeFilters.amount.max !== null) && (
+            <div className="flex gap-2 flex-wrap mt-3">
               <div
                 onClick={e => {
                   const pillRect = e.currentTarget.getBoundingClientRect();
@@ -228,7 +240,7 @@ export default function FilterDropdown({ activeFilters, setActiveFilters }: Filt
                   <X size={16} />
                 </button>
 
-                <span className="font-medium">Amount</span>
+                <span className="font-medium text-sm hover:underline">Amount</span>
 
                 <div className="bg-white rounded-full">
                   {activeFilters.amount.min !== null && (
@@ -248,8 +260,8 @@ export default function FilterDropdown({ activeFilters, setActiveFilters }: Filt
                   )}
                 </div>
               </div>
-            )}
-        </div>
+            </div>
+          )}
       </div>
       {open && (
         <div

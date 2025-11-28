@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
-import type { Row } from "../helper/type";
+import type { Row, BiggestTripDataProps } from "../helper/type";
 import { X, EllipsisVertical, ChevronDown, FilePenLine, CirclePlus, FileText } from "lucide-react";
 import { Modal } from "../components/Modal";
 
-interface SelectedTripProps {
+interface BiggestTripProps {
   selectedTrip: Row | null;
-  setSelectedTrip: React.Dispatch<React.SetStateAction<Row | null>>;
+  setSelectedTrip: React.Dispatch<React.SetStateAction<BiggestTripDataProps | null>>;
 }
-export default function SelectedTrip({ selectedTrip, setSelectedTrip }: SelectedTripProps) {
+export default function SelectedTrip({ selectedTrip, setSelectedTrip }: BiggestTripProps) {
   const [openDot, setOpenDot] = useState(false);
   const [openButton, setOpenButton] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -50,9 +50,7 @@ export default function SelectedTrip({ selectedTrip, setSelectedTrip }: Selected
           <h2 className="text-4xl font-semibold">{selectedTrip?.title}</h2>
           <div className="flex items-center text-left mt-4">
             <p className="text-sm text-gray-500">Trip to {selectedTrip?.destination} </p>
-            <p className="text-sm text-gray-500 capitalize">
-              &nbsp; – &nbsp;{selectedTrip?.status}
-            </p>
+            <p className="text-sm text-gray-500 capitalize">&nbsp; </p>
           </div>
         </div>
 
@@ -77,12 +75,18 @@ export default function SelectedTrip({ selectedTrip, setSelectedTrip }: Selected
                 <p>{selectedTrip?.details || "No details available"}</p>
               </div>
             </div>
+            <div className="text-left">
+              <div>
+                <p className="text-sm text-gray-500">Department</p>
+                <p>{selectedTrip?.department || "No details available"}</p>
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="border-t border-gray-200">
           {selectedTrip ? (
-            <div className="flex flex-col gap-10 p-4 items-start w-full">
+            <div className="flex flex-col gap-10 py-4 px-8 items-start w-full">
               <div className="w-full text-left text-2xl font-semibold">{selectedTrip.name}</div>
               <div
                 // key={idx}

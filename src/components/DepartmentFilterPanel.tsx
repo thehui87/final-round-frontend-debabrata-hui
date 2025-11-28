@@ -50,11 +50,11 @@ export default function DepartmentFilterPanel({
           return (
             <div
               key={dept}
-              className="flex items-center justify-between px-4 py-3 hover:bg-[#f7f6f2] group cursor-pointer"
+              className="flex items-center justify-between px-4 hover:bg-[#f7f6f2] group cursor-pointer"
             >
               {/* Checkbox + label */}
               <label
-                className="flex items-center gap-3 cursor-pointer"
+                className="flex items-center gap-3 cursor-pointer py-3 w-full"
                 onClick={() => toggle(dept)}
               >
                 <div

@@ -50,10 +50,13 @@ export default function LocationFilterPanel({
           return (
             <div
               key={loc}
-              className="flex items-center justify-between px-4 py-3 hover:bg-[#f7f6f2] group cursor-pointer"
+              className="flex items-center justify-between px-4 hover:bg-[#f7f6f2] group cursor-pointer"
             >
               {/* Checkbox + label */}
-              <label className="flex items-center gap-3 cursor-pointer" onClick={() => toggle(loc)}>
+              <label
+                className="flex items-center gap-3 cursor-pointer py-3 w-full"
+                onClick={() => toggle(loc)}
+              >
                 <div
                   className={`w-4 h-4 border flex items-center justify-center ${
                     isSelected ? "bg-green-600 border-green-600" : "border-gray-400"

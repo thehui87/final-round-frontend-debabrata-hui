@@ -79,8 +79,6 @@ export default function Sidebar() {
 
     if (item.submenu) {
       setOpenSubmenu(openSubmenu === index ? null : index);
-    } else {
-      console.log("Navigate to:", item.label);
     }
   };
 
@@ -177,7 +175,6 @@ export default function Sidebar() {
                       <div
                         key={subIndex}
                         className="pr-4 py-3 pl-8 text-sm text-left hover:bg-[#ebe8e5] cursor-pointer text-[#707062] hover:underline"
-                        onClick={() => console.log("Navigate to", sub)}
                       >
                         {sub}
                       </div>
@@ -217,7 +214,6 @@ export default function Sidebar() {
                   <div
                     key={index}
                     className="pr-4 py-3 pl-8 text-sm text-left hover:bg-[#ebe8e5] cursor-pointer text-[#707062] hover:underline"
-                    onClick={() => console.log("Navigate to", item)}
                   >
                     {item}
                   </div>
