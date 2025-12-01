@@ -1,4 +1,5 @@
 import type { Row } from "./type";
+import type { DateRange } from "react-day-picker";
 
 export function getMostFrequentValues<T extends keyof Row>(rows: Row[], key: T): Array<Row[T]> {
   const countMap = rows.reduce<Record<string, number>>((acc, row) => {
@@ -165,4 +166,24 @@ export function getTotalSpend(trips: Row[]): number {
 export function getFormattedTotalSpend(trips: Row[]): string {
   const total = getTotalSpend(trips);
   return `$${total.toFixed(2)}`;
+}
+
+function formatMonthDay(date: Date) {
+  return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+}
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+
+export function getLastNMonthsRange(months: number) {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth() - months, 1);
+  const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  return `${formatMonthDay(start)} – ${formatMonthDay(end)}`;
+}
+
+export function formatDateRange(range: DateRange | undefined) {
+  if (!range || !range.from || !range.to) return "";
+  return `${formatDate(range.from)} – ${formatDate(range.to)}`;
 }

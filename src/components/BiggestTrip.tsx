@@ -53,34 +53,31 @@ export default function SelectedTrip({ selectedTrip, setSelectedTrip }: BiggestT
             <p className="text-sm text-gray-500 capitalize">&nbsp; </p>
           </div>
         </div>
-
-        <div className="p-6 text-gray-800 space-y-6">
-          <div className="flex gap-10">
-            <div className="text-left">
-              <p className="text-sm text-gray-500">When</p>
-              <p>
-                {selectedTrip?.start} – {selectedTrip?.end}
-              </p>
-            </div>
-
-            <div className="text-left">
-              <p className="text-sm text-gray-500">Where</p>
-              <p>{selectedTrip?.destination}</p>
-            </div>
+        <div className="grid grid-cols-2 gap-y-6 gap-x-8 px-6 py-10 border-b border-gray-200">
+          {/* When */}
+          <div className="flex flex-col justify-start items-start">
+            <p className="text-xs text-gray-500 uppercase tracking-wide">When</p>
+            <p>
+              {selectedTrip?.start} – {selectedTrip?.end}
+            </p>
           </div>
-          <div className="flex gap-10">
-            <div className="text-left">
-              <div>
-                <p className="text-sm text-gray-500">Details</p>
-                <p>{selectedTrip?.details || "No details available"}</p>
-              </div>
-            </div>
-            <div className="text-left">
-              <div>
-                <p className="text-sm text-gray-500">Department</p>
-                <p>{selectedTrip?.department || "No details available"}</p>
-              </div>
-            </div>
+
+          {/* Where */}
+          <div className="flex flex-col justify-start items-start">
+            <p className="text-xs text-gray-500 uppercase tracking-wide">Where</p>
+            <p>{selectedTrip?.destination}</p>
+          </div>
+
+          {/* Details */}
+          <div className="flex flex-col justify-start items-start">
+            <p className="text-xs text-gray-500 uppercase tracking-wide">Details</p>
+            <p>{selectedTrip?.details || "No details available"}</p>
+          </div>
+
+          {/* Department */}
+          <div className="flex flex-col justify-start items-start">
+            <p className="text-xs text-gray-500 uppercase tracking-wide">Department</p>
+            <p>{selectedTrip?.department || "No details available"}</p>
           </div>
         </div>
 

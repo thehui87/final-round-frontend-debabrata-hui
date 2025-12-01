@@ -10,6 +10,7 @@ export interface TripState {
   tripData: Row[];
   filteredTrips: Row[];
   globalFilterOn: boolean;
+  globalCustomRange: DateRange | undefined;
 }
 
 const initialState: TripState = {
@@ -18,6 +19,7 @@ const initialState: TripState = {
   tripData: [],
   filteredTrips: [],
   globalFilterOn: false,
+  globalCustomRange: undefined,
 };
 
 const tripSlice = createSlice({
@@ -39,9 +41,18 @@ const tripSlice = createSlice({
     setGlobalFilterOn: (state, action: PayloadAction<boolean>) => {
       state.globalFilterOn = action.payload;
     },
+    setGlobalCustomRange: (state, action: PayloadAction<DateRange | undefined>) => {
+      state.globalCustomRange = action.payload;
+    },
   },
 });
 
-export const { setActiveTab, setDateRange, setData, setFilteredTrips, setGlobalFilterOn } =
-  tripSlice.actions;
+export const {
+  setActiveTab,
+  setDateRange,
+  setData,
+  setFilteredTrips,
+  setGlobalFilterOn,
+  setGlobalCustomRange,
+} = tripSlice.actions;
 export default tripSlice.reducer;

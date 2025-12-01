@@ -4,40 +4,24 @@ import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../redux/store";
 import type { DateRange } from "react-day-picker";
 import { DateRangePickerInline } from "./DateRangePickerInline";
-import { setGlobalFilterOn, setFilteredTrips } from "../redux/slices/tripSlice";
-
-function getLastNMonthsRange(months: number) {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), now.getMonth() - months, 1);
-  const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-  return `${formatMonthDay(start)} – ${formatMonthDay(end)}`;
-}
-
-function formatMonthDay(date: Date) {
-  return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-}
-
-function formatDate(date: Date) {
-  return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
-}
-
-function formatDateRange(range: DateRange | undefined) {
-  if (!range || !range.from || !range.to) return "";
-  return `${formatDate(range.from)} – ${formatDate(range.to)}`;
-}
+import {
+  setGlobalFilterOn,
+  setFilteredTrips,
+  setGlobalCustomRange,
+} from "../redux/slices/tripSlice";
+import { getLastNMonthsRange, formatDateRange } from "../helper/functions";
 
 const CustomSelectTag = () => {
   const dispatch = useDispatch();
   const [dateOpen, setDateOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState("All");
-  const [customRange, setCustomRange] = useState<DateRange | undefined>(undefined);
+  const { tripData, globalCustomRange } = useSelector((state: RootState) => state.trip);
+  const [customRange, setCustomRange] = useState<DateRange | undefined>(globalCustomRange);
   const [showCalendar, setShowCalendar] = useState(false);
   const [calendarPosition, setCalendarPosition] = useState<{ left?: number; right?: number }>({});
   const wrapperRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const calendarWidth = 500;
-
-  const tripData = useSelector((state: RootState) => state.trip.tripData);
 
   const options = [
     { label: "Last 3 months", subtitle: getLastNMonthsRange(3) },
@@ -59,6 +43,7 @@ const CustomSelectTag = () => {
   const handleReset = () => {
     setSelectedDate("All");
     setCustomRange(undefined);
+    setGlobalCustomRange(undefined);
     setDateOpen(false);
     setShowCalendar(false);
     dispatch(setFilteredTrips([]));
@@ -113,8 +98,13 @@ const CustomSelectTag = () => {
       const filteredTrips = filterTrips(activeDateRange);
       dispatch(setFilteredTrips(filteredTrips)); // Dispatch filtered trips to Redux
       dispatch(setGlobalFilterOn(true));
+      dispatch(setGlobalCustomRange(customRange));
     }
-  }, [activeDateRange, dispatch]);
+  }, [activeDateRange, dispatch, customRange]);
+
+  useEffect(() => {
+    dispatch(setGlobalCustomRange(globalCustomRange));
+  }, [dispatch, globalCustomRange]);
 
   // Dynamically calculate calendar position
   useEffect(() => {

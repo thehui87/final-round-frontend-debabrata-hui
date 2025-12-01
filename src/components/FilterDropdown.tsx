@@ -7,14 +7,21 @@ import CardHolderFilterPanel from "./CardHolderFilterPanel";
 import { filterOptions, cardholders } from "../helper/data";
 // locations, departments
 import type { ActiveFilters } from "../helper/type";
-import { useSelector } from "react-redux";
+import { useSelector } from "react-redux"; // useDispatch
 import type { RootState } from "../redux/store";
+import { formatDateRange } from "../helper/functions";
+// import {
+//   setFilteredTrips,
+//   setGlobalFilterOn,
+//   setGlobalCustomRange,
+// } from "../redux/slices/tripSlice";
 
 interface FilterDropdownProps {
   activeFilters: ActiveFilters;
   setActiveFilters: React.Dispatch<React.SetStateAction<ActiveFilters>>;
 }
 export default function FilterDropdown({ activeFilters, setActiveFilters }: FilterDropdownProps) {
+  // const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [panel, setPanel] = useState<"main" | "amount" | "cardholder" | "department" | "location">(
     "main"
@@ -22,7 +29,9 @@ export default function FilterDropdown({ activeFilters, setActiveFilters }: Filt
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const [search, setSearch] = useState("");
-  const { tripData, filteredTrips, globalFilterOn } = useSelector((state: RootState) => state.trip);
+  const { tripData, filteredTrips, globalFilterOn, globalCustomRange } = useSelector(
+    (state: RootState) => state.trip
+  );
 
   const activeData = useMemo(() => {
     return globalFilterOn ? filteredTrips : tripData;
@@ -80,6 +89,11 @@ export default function FilterDropdown({ activeFilters, setActiveFilters }: Filt
     ? searchableItems.filter(item => item.name.toLowerCase().includes(search.toLowerCase()))
     : [];
 
+  useEffect(() => {
+    if (globalFilterOn) {
+      console.log(formatDateRange(globalCustomRange));
+    }
+  }, [globalCustomRange, globalFilterOn]);
   return (
     <div className="relative w-full" ref={containerRef}>
       {/* Trigger */}
@@ -106,6 +120,45 @@ export default function FilterDropdown({ activeFilters, setActiveFilters }: Filt
       </div>
 
       <div className="flex gap-4">
+        {/* {globalFilterOn && (globalCustomRange?.from || globalCustomRange?.to) && (
+          <div className="flex gap-2 flex-wrap mt-3">
+            <div
+              onClick={e => {
+                const pillRect = e.currentTarget.getBoundingClientRect();
+                const wrapperRect = containerRef.current!.getBoundingClientRect();
+
+                setPosition({
+                  top: pillRect.bottom - wrapperRect.top,
+                  left: pillRect.left - wrapperRect.left,
+                });
+                // setPanel("department");
+                setOpen(true);
+              }}
+              className="group flex items-center bg-[#e0decd] rounded-full px-3 py-1 gap-2 cursor-pointer"
+            >
+              <Funnel className="text-gray-700 group-hover:hidden" size={16} />
+
+              <button
+                onClick={e => {
+                  e.stopPropagation();
+                  dispatch(setGlobalCustomRange(undefined));
+                  dispatch(setFilteredTrips([]));
+                  dispatch(setGlobalFilterOn(false));
+                }}
+                className="hidden group-hover:flex hover:bg-white text-gray-700 rounded-full cursor-pointer"
+              >
+                <X size={16} />
+              </button>
+
+              <span className="font-medium text-sm hover:underline">Global </span>
+
+              <span className="bg-white rounded-full px-2 py-0.5 text-sm border">
+                {formatDateRange(globalCustomRange)}
+              </span>
+            </div>
+          </div>
+        )} */}
+
         {/* Department chip group */}
         {activeFilters.department.length > 0 && (
           <div className="flex gap-2 flex-wrap mt-3">
