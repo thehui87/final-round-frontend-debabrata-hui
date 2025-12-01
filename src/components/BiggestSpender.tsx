@@ -48,7 +48,7 @@ export default function BiggestSpender({ selectedData, setSelectedData }: Bigges
 
   const funds = useMemo(() => {
     return activeData.filter(item => item.name === selectedData.name);
-  }, [activeData, selectedData, filteredTrips]);
+  }, [activeData, selectedData]);
 
   return (
     <div>

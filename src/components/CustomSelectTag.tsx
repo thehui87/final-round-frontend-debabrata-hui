@@ -80,27 +80,26 @@ const CustomSelectTag = () => {
     }
   }, [selectedDate, customRange]);
 
-  const filterTrips = (activeDateRange: DateRange | undefined) => {
-    if (!activeDateRange?.from || !activeDateRange?.to) return []; // No date range selected, return empty array
-
-    // Filter trips based on the selected date range
-    return tripData.filter(trip => {
-      const tripStart = new Date(trip.start);
-      const tripEnd = new Date(trip.end);
-
-      // Check if the trip is within the selected date range
-      return tripEnd >= activeDateRange.from! && tripStart <= activeDateRange.to!;
-    });
-  };
-
   useEffect(() => {
+    const filterTrips = (activeDateRange: DateRange | undefined) => {
+      if (!activeDateRange?.from || !activeDateRange?.to) return []; // No date range selected, return empty array
+
+      // Filter trips based on the selected date range
+      return tripData.filter(trip => {
+        const tripStart = new Date(trip.start);
+        const tripEnd = new Date(trip.end);
+
+        // Check if the trip is within the selected date range
+        return tripEnd >= activeDateRange.from! && tripStart <= activeDateRange.to!;
+      });
+    };
     if (activeDateRange) {
       const filteredTrips = filterTrips(activeDateRange);
       dispatch(setFilteredTrips(filteredTrips)); // Dispatch filtered trips to Redux
       dispatch(setGlobalFilterOn(true));
       dispatch(setGlobalCustomRange(customRange));
     }
-  }, [activeDateRange, dispatch, customRange]);
+  }, [activeDateRange, dispatch, customRange, tripData]);
 
   useEffect(() => {
     dispatch(setGlobalCustomRange(globalCustomRange));
