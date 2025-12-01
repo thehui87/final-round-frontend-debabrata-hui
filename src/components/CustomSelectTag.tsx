@@ -22,6 +22,7 @@ const CustomSelectTag = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const calendarWidth = 500;
+  const [pendingSelection, setPendingSelection] = useState<string | null>(null);
 
   const options = [
     { label: "Last 3 months", subtitle: getLastNMonthsRange(3) },
@@ -31,12 +32,14 @@ const CustomSelectTag = () => {
   ];
 
   const handleSelect = (label: string) => {
-    setSelectedDate(label);
     if (label === "Custom range") {
+      setPendingSelection("Custom range");
       setShowCalendar(true);
     } else {
-      setDateOpen(false);
+      setSelectedDate(label);
+      setCustomRange(undefined);
       setShowCalendar(false);
+      setDateOpen(false);
     }
   };
 
@@ -79,6 +82,13 @@ const CustomSelectTag = () => {
         return undefined;
     }
   }, [selectedDate, customRange]);
+
+  const isOptionSelected = (label: string) => {
+    if (label === "Custom range") {
+      return selectedDate === "Custom range" && customRange?.from && customRange?.to;
+    }
+    return selectedDate === label;
+  };
 
   useEffect(() => {
     const filterTrips = (activeDateRange: DateRange | undefined) => {
@@ -190,7 +200,8 @@ const CustomSelectTag = () => {
                     )}
                   </div>
 
-                  {selectedDate === label && <Check size={16} />}
+                  {/* {selectedDate === label && <Check size={16} />} */}
+                  {isOptionSelected(label) && <Check size={16} />}
                   {label === "Custom range" && <ChevronRight size={16} className="text-gray-400" />}
                 </div>
               </li>
@@ -220,7 +231,14 @@ const CustomSelectTag = () => {
         >
           <DateRangePickerInline
             value={customRange}
-            onChange={setCustomRange}
+            onChange={range => {
+              setCustomRange(range);
+
+              if (pendingSelection === "Custom range" && range?.from && range?.to) {
+                setSelectedDate("Custom range");
+                setPendingSelection(null);
+              }
+            }}
             onBack={handleBackFromCalendar}
           />
 
